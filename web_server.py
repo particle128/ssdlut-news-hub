@@ -14,8 +14,8 @@ def generate_page(rs):
 		link_list=''
 		# 以整数方式比较!!!
 		for key,val in sorted(items,reverse=True,key=lambda x: int(x[0])): 
-			link_list+='<tr><td>%s</td><td align="center">%s</td><td><a href="http://127.0.0.1?key=%s&name=%s">已阅</a></td></tr>'%(val,rs.hget(name+'_date',key),key,urllib.quote(name))
-		link_outAll='<a href="http://127.0.0.1?key=all&name=%s">全部已阅</a>'%urllib.quote(name)
+			link_list+='<tr><td>%s</td><td align="center">%s</td><td><a href="http://127.0.0.1:8080?key=%s&name=%s">已阅</a></td></tr>'%(val,rs.hget(name+'_date',key),key,urllib.quote(name))
+		link_outAll='<a href="http://127.0.0.1:8080?key=all&name=%s">全部已阅</a>'%urllib.quote(name)
 		body+='''<h2><a href='%s'>%s</a></h2>
 				<div class="well well-small">
                 <table class="table table-hover">
@@ -73,7 +73,7 @@ class HttpHandler(BaseHTTPRequestHandler):
 				out_of_date(rs,name,key)
 			logging.warning(key+' is removed from redis')
 			self.send_response(301) #!!!重定向
-			self.send_header("Location","http://127.0.0.1") #!!!重定向
+			self.send_header("Location","http://127.0.0.1:8080") #!!!重定向
 			self.end_headers()
 		else:
 			self.send_response(200) 

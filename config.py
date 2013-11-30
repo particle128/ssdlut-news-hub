@@ -3,7 +3,7 @@
 import re
 
 # 每隔10min抓取一次
-LOG_PATH='/home/mashu/log/infoCollection.log'
+LOG_PATH='/home/mashu/log/newsInfo.log'
 INTERVAL={'hour':'*','min':'*/10','sec':'0'}
 SOURCE=(
 		{

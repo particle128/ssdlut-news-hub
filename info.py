@@ -16,12 +16,17 @@ class Crawler():
 	def __init__(self):
 		self.rs=redis.Redis()
 
-	# 没出现在同名set里的链接和对应日期才被保存
+	# 没有过期的项目才被保存
 	def save_to_redis(self,name,key,a,date):
 		if not self.rs.sismember(name+'_outDate',key):
 			if self.rs.hsetnx(name,key,a):
 				self.times+=1
+				print u' newly adds'
+			else:
+				print u' already exists'
 			self.rs.hsetnx(name+'_date',key,date)
+		else:
+			print u' out of date'
 		
 	
 	def process_url(self,name,root,url,href_form,date_form,date_loc):
@@ -48,6 +53,7 @@ class Crawler():
 			for match in re.finditer(pattern,req.content,flags=re.S): # *** re.S
 				key=re.findall(r'\d+',match.group(a))[0]
 				aTag=match.group(a).decode('gb2312').replace(u'href="',u'href="'+unicode(root))
+				print u'key=',key,u' name=',name
 				self.save_to_redis(name,key.decode('gb2312'),aTag,match.group(d).decode('gb2312'))
 		# 如果beautifulSoup可以解析
 		else:
@@ -61,6 +67,7 @@ class Crawler():
 				else:
 					date=a.findPrevious(text=date_form)
 				date=date_form.findall(date)[0]
+				print u'key=',key,u' name=',name
 				self.save_to_redis(name,key,a,date)
 		logging.warning('%d new records added to %s'%(self.times,name))#.decode('utf-8')
 
@@ -71,10 +78,9 @@ class Crawler():
 		logging.warning('crawler end...')
 
 if __name__=='__main__':
-	red=redis.Redis()
 
-	# 启动后，网络需要一段时间才能正常使用
-	time.sleep(60*3)
+	# 等待网络功能正常使用再运行
+	time.sleep(60*2)
 
 	crawler=Crawler()
 	crawler.run() 
@@ -83,6 +89,9 @@ if __name__=='__main__':
 	sched.start()
 	sched.add_cron_job(crawler.run,hour=INTERVAL['hour'],minute=INTERVAL['min'],second=INTERVAL['sec'])
 
-	httpd=HTTPServer(('127.0.0.1',80),HttpHandler)
+	# 80端口号需要管理员权限
+	httpd=HTTPServer(('127.0.0.1',8080),HttpHandler)
 	httpd.serve_forever()
+
+
 
