@@ -1,9 +1,8 @@
-News hub of SSDUT(大连理工大学软件学院)
+News hub of SSDUT
 ===============
 
-
 ## Requirements
-```sh
+```
 sudo easy_install requests
 sudo easy_install beautifulsoup
 sudo easy_install redis
@@ -13,11 +12,11 @@ sudo apt-get install redis-server
 
 ## Usage
 ### run the script
-```sh
-python info.py
+```
+python info.py &
 ```
 ### visit the site
-open `http://127.0.0.1:8080` in an incognito window of Chrome(Ctrl+Shift+N)
-Read the news you are interested, and click '已阅' or '全部已阅' to filter news.
-The screen capture:
-![image][images/ssdut-news-hub.png]
+open `http://127.0.0.1:8080` in an incognito window of Chrome(Ctrl+Shift+N)  
+Read the news you are interested, and click '已阅' or '全部已阅' to filter news.  
+The screen capture:  
+![image](images/ssdut-news-hub.png)
